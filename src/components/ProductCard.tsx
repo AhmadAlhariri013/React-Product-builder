@@ -6,6 +6,7 @@ import CircleColor from "./CircleColor";
 
 
 
+
 interface IProps {
   product: IProduct;
   //setProductToEdit: (product: IProduct) => void;
@@ -23,6 +24,8 @@ const ProductCard = ({
   //setProductToEditIdx,
   // openConfirmModal,
 }: IProps) => {
+
+
   const { title, description, imageURL, //price, 
     colors, category
   } = product;
