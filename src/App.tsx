@@ -5,6 +5,8 @@ import Modal from "./components/UI/Modal";
 import { productList, formInputsList } from "./data"
 import Input from "./components/UI/Input";
 import { IProduct } from "./interfaces";
+import { productValidation } from "./validation";
+import ErrorMessage from "./components/ErrorMesagge";
 
 // Constnants 
 const defaultProduct = {
@@ -23,6 +25,7 @@ const defaultProduct = {
 const App = () => {
   /* ------- States -------  */
   const [product, setProduct] = useState<IProduct>(defaultProduct)
+  const [errors, setErrors] = useState({ title: "", description: "", imageURL: "", price: "" });
   const [isOpen, setIsOpen] = useState(false)
 
   /* ------- HANDLER -------  */
@@ -37,12 +40,34 @@ const App = () => {
     setProduct({
       ...product,
       [name]: value
+    });
+
+    setErrors({
+      ...errors,
+      [name]: ''
     })
   }
 
   const submitHandler = (event: ChangeEvent<HTMLFormElement>): void => {
     event.preventDefault();
-    console.log(product)
+    const { title, description, price, imageURL } = product;
+
+    const errors = productValidation({
+      title,
+      description,
+      price,
+      imageURL,
+    });
+
+    console.log(errors);
+
+    const hasErrorMsg = Object.values(errors).some(value => value === "") && Object.values(errors).every(value => value === "");
+    if (!hasErrorMsg) {
+      setErrors(errors)
+      return;
+    }
+
+    console.log("The Submit was successed")
   }
 
   /* ------- Render -------  */
@@ -66,6 +91,7 @@ const App = () => {
           {input.label}
         </label>
         <Input type="text" id={input.id} name={input.name} value={product[input.name]} onChange={onChangeHandler} />
+        <ErrorMessage msg={errors[input.name]} />
       </div>
     )
   })
